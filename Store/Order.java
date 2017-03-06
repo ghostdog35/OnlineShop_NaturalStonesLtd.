@@ -1,5 +1,7 @@
 package Store;
 
+import java.util.Scanner;
+
 public class Order {
 	
 	enum Treatment{
@@ -39,16 +41,47 @@ public class Order {
 		}
 		if(this.longSide>mat.getLongSide()){
 			System.out.println("Your piece is bigger than our slabs - so it will be produced from more than one piece");
-			System.out.println("Please confirm:"); // button yes or no for confirm - if yes - continue with the method
+			System.out.println("Please confirm:"); // buttons YES and NO for confirm - if yes - continue with the method
+			Scanner sc = new Scanner(System.in);
+			String temp = sc.nextLine();
+			if(temp.equalsIgnoreCase("no")){
+				System.out.println("Sorry that we can't produce your order");
+				return;
+			}
 		}
-		
-		
-		
+		this.price = ((this.longSideTreatment*this.longSide+this.shortSideTreatment*this.shortSide)*this.getTreatmentPrice()/100)
+				+(this.longSide*this.shortSide*1.1*this.mat.getPrice()/10000);
 		
 	}
 	
 	
-	
+	private int getTreatmentPrice(){
+		int temp=0;
+		int thick = this.mat.getThickness().getValue();
+		double typeOfMaterial=0;
+		switch (this.mat.getType()) {
+		case Granite:
+			typeOfMaterial=2;
+			break;
+		case Marble:
+			typeOfMaterial=1.5;
+			break;
+		default:
+			typeOfMaterial=1;
+			break;
+		}
+		switch (this.type) {
+		case Chamfer:
+			temp = (int) (2*typeOfMaterial*thick);
+			break;
+		case Rounded:
+			temp = (int) (4*typeOfMaterial*thick);
+			break;
+		default:
+			break;
+		}
+		return temp;
+	}
 
 
 }
